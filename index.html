@@ -64,4 +64,132 @@
       left:50%;
       width:86%;
       height:14%;
-      transform:translateX(-50%)
+      transform:translateX(-50%);
+      border-radius:999px;
+    }
+    .hotspot.rim.top{ top:2.5%; }
+    .hotspot.rim.bottom{ bottom:2.5%; }
+
+    /* Buttons */
+    .controls{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      margin-top:12px;
+    }
+    button{
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      background:#fff;
+      cursor:pointer;
+    }
+
+    /* ===== DEBUG MODE (visualize hotspots + numbers) ===== */
+    .debug .hotspot{
+      outline: 2px dashed rgba(255,0,0,.75);
+      background: rgba(255,0,0,.10);
+    }
+    .tag{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      font-weight:700;
+      font-size:18px;
+      color:#000;
+      background: rgba(255,255,255,.90);
+      border-radius:999px;
+      padding:4px 10px;
+      pointer-events:none; /* so clicks still go to the link */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wheel-stage">
+    <!-- Add class="debug" here to show outlines + numbers -->
+    <div id="wheel" class="wheel debug">
+      <img src="Wheel.png" alt="Wheel" class="wheel-img" />
+
+      <!-- CENTER -->
+      <a class="hotspot center" href="https://example.com/home" target="_blank" rel="noopener" aria-label="Home"></a>
+
+      <!-- WEDGES (numbers are real elements now) -->
+      <a class="hotspot wedge" style="--angle:-90deg" href="https://example.com/link1" target="_blank" rel="noopener" aria-label="Slice 1">
+        <span class="tag">1</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:-45deg" href="https://example.com/link2" target="_blank" rel="noopener" aria-label="Slice 2">
+        <span class="tag">2</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:0deg" href="https://example.com/link3" target="_blank" rel="noopener" aria-label="Slice 3">
+        <span class="tag">3</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:45deg" href="https://example.com/link4" target="_blank" rel="noopener" aria-label="Slice 4">
+        <span class="tag">4</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:90deg" href="https://example.com/link5" target="_blank" rel="noopener" aria-label="Slice 5">
+        <span class="tag">5</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:135deg" href="https://example.com/link6" target="_blank" rel="noopener" aria-label="Slice 6">
+        <span class="tag">6</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:180deg" href="https://example.com/link7" target="_blank" rel="noopener" aria-label="Slice 7">
+        <span class="tag">7</span>
+      </a>
+
+      <a class="hotspot wedge" style="--angle:-135deg" href="https://example.com/link8" target="_blank" rel="noopener" aria-label="Slice 8">
+        <span class="tag">8</span>
+      </a>
+
+      <!-- RIMS -->
+      <a class="hotspot rim top" href="https://example.com/top-rim" target="_blank" rel="noopener" aria-label="Top Rim"></a>
+      <a class="hotspot rim bottom" href="https://example.com/bottom-rim" target="_blank" rel="noopener" aria-label="Bottom Rim"></a>
+    </div>
+
+    <div class="controls">
+      <button id="spinBtn" type="button">Spin</button>
+      <button id="stopBtn" type="button">Stop</button>
+    </div>
+  </div>
+
+  <script>
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spinBtn");
+    const stopBtn = document.getElementById("stopBtn");
+
+    let angle = 0, velocity = 0, spinning = false, rafId = null;
+
+    function animate(){
+      if(!spinning) return;
+      velocity *= 0.985;
+      angle = (angle + velocity) % 360;
+      wheel.style.transform = `rotate(${angle}deg)`;
+      if(Math.abs(velocity) < 0.05){ spinning=false; velocity=0; return; }
+      rafId = requestAnimationFrame(animate);
+    }
+
+    function spin(){
+      velocity = 18 + Math.random() * 10;
+      spinning = true;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(animate);
+    }
+
+    function stop(){
+      spinning = false;
+      velocity = 0;
+      cancelAnimationFrame(rafId);
+    }
+
+    spinBtn.addEventListener("click", spin);
+    stopBtn.addEventListener("click", stop);
+  </script>
+</body>
+</html>

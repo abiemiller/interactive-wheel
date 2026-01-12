@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wheel – Numbered Debug (No JS, Rotated Overlay)</title>
+  <title>Wheel – Numbered Debug (Adjusted)</title>
 
   <style>
     body{
@@ -54,10 +54,13 @@
   <div class="stage">
     <svg viewBox="0 0 1000 1000" aria-label="Numbered Literacy Wheel">
       <!-- wheel image -->
-      <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
+      <image href="Wheel.png"
+             x="0" y="0"
+             width="1000" height="1000"
+             preserveAspectRatio="xMidYMid meet"></image>
 
-      <!-- OVERLAY (outlines + numbers) rotated +1deg to align with wheel -->
-      <g transform="rotate(1 500 500)">
+      <!-- OVERLAY (outlines + numbers) rotated +23.5deg clockwise -->
+      <g transform="rotate(23.5 500 500)">
 
         <!-- slice outlines (8) -->
         <path class="slice-outline" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>

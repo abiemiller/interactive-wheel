@@ -31,15 +31,45 @@
       touch-action: manipulation;
     }
 
-    /* Make the image not block clicks */
+    /* ensure the image never blocks clicks */
     image{ pointer-events:none; }
 
-    /* NO glow / NO highlight: hit areas fully invisible */
-    .hit, .center-hit{
+    /* Clickable slice shapes: invisible by default */
+    .hit{
       fill: rgba(255,255,255,0);
-      stroke: rgba(255,255,255,0);
-      stroke-width: 0;
+      stroke: none;               /* <- removes lines */
+      pointer-events: all;        /* <- ensures clicks work */
+      cursor: pointer;
     }
+
+    /* Soft glow highlight */
+    @media (hover:hover){
+      .hit:hover{
+        fill: rgba(255,255,255,0.10);
+        filter: url(#softGlow);
+      }
+    }
+    .hit:active{
+      fill: rgba(255,255,255,0.14);
+      filter: url(#softGlow);
+    }
+    a:focus-visible .hit{
+      fill: rgba(255,255,255,0.12);
+      filter: url(#softGlow);
+      outline: none;
+    }
+
+    /* Center spin area: invisible but clickable */
+    .center-hit{
+      fill: rgba(255,255,255,0);
+      stroke: none;               /* <- no lines */
+      pointer-events: all;
+      cursor: pointer;
+    }
+    @media (hover:hover){
+      .center-hit:hover{ filter: url(#softGlow); }
+    }
+    .center-hit:active{ filter: url(#softGlow); }
   </style>
 </head>
 
@@ -47,58 +77,82 @@
   <div class="stage">
     <svg viewBox="0 0 1000 1000" aria-label="Interactive Literacy Wheel">
 
-      <!-- ROTOR: this group spins -->
+      <defs>
+        <!-- Soft glow filter (subtle halo) -->
+        <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="white" flood-opacity="0.55"/>
+        </filter>
+      </defs>
+
+      <!-- ROTOR: image + slices spin together -->
       <g id="rotor">
-        <!-- Wheel image -->
         <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
 
-        <!-- OVERLAY: slice hit-areas rotated to match your artwork -->
+        <!-- Slice hit-areas rotated to match your artwork -->
         <g transform="rotate(23.5 500 500)">
 
-          <!-- Slice 1 = Assessment -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment" target="_blank" rel="noopener" aria-label="Assessment">
+          <!-- NOTE: Using BOTH href + xlink:href for maximum compatibility -->
+
+          <!-- 1: Culturally & Linguistically Responsive -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
+             target="_blank" rel="noopener" aria-label="Culturally and Linguistically Responsive">
             <path class="hit" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
           </a>
 
-          <!-- Slice 2 = Phonological Awareness -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness" target="_blank" rel="noopener" aria-label="Phonological Awareness">
+          <!-- 2: Assessment -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"
+             target="_blank" rel="noopener" aria-label="Assessment">
             <path class="hit" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
           </a>
 
-          <!-- Slice 3 = Phonics and Spelling -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling" target="_blank" rel="noopener" aria-label="Phonics and Spelling">
+          <!-- 3: Phonological Awareness -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
+             target="_blank" rel="noopener" aria-label="Phonological Awareness">
             <path class="hit" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
           </a>
 
-          <!-- Slice 4 = Vocabulary and Morphology -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology" target="_blank" rel="noopener" aria-label="Vocabulary and Morphology">
+          <!-- 4: Phonics & Spelling -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
+             target="_blank" rel="noopener" aria-label="Phonics and Spelling">
             <path class="hit" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
           </a>
 
-          <!-- Slice 5 = Syntax -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax" target="_blank" rel="noopener" aria-label="Syntax">
+          <!-- 5: Vocabulary & Morphology -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
+             target="_blank" rel="noopener" aria-label="Vocabulary and Morphology">
             <path class="hit" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
           </a>
 
-          <!-- Slice 6 = Cross-Linguistic Connections -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections" target="_blank" rel="noopener" aria-label="Cross-Linguistic Connections">
+          <!-- 6: Syntax -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
+             target="_blank" rel="noopener" aria-label="Syntax">
             <path class="hit" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
           </a>
 
-          <!-- Slice 7 = Text Comprehension and Written Expression -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression" target="_blank" rel="noopener" aria-label="Text Comprehension and Written Expression">
+          <!-- 7: Cross-Linguistic Connections -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
+             target="_blank" rel="noopener" aria-label="Cross-Linguistic Connections">
             <path class="hit" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
           </a>
 
-          <!-- Slice 8 = Culturally and Linguistically Responsive -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive" target="_blank" rel="noopener" aria-label="Culturally and Linguistically Responsive">
+          <!-- 8: Text Comprehension & Written Expression -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
+             target="_blank" rel="noopener" aria-label="Text Comprehension and Written Expression">
             <path class="hit" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
           </a>
 
         </g>
       </g>
 
-      <!-- CENTER: click/tap to spin (stays in place while wheel spins) -->
+      <!-- CENTER: tap/click to spin -->
       <circle id="centerSpin" class="center-hit" cx="500" cy="500" r="150"></circle>
     </svg>
   </div>
@@ -120,7 +174,7 @@
     function tick(){
       if(!spinning) return;
 
-      velocity *= 0.985;            // friction
+      velocity *= 0.985; // friction
       angle = (angle + velocity) % 360;
       render();
 
@@ -133,7 +187,7 @@
     }
 
     function spin(){
-      const kick = 18 + Math.random() * 10; // spin strength
+      const kick = 18 + Math.random() * 10;
       velocity += kick;
 
       if(!spinning){

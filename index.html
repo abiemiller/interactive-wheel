@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wheel – Numbered Debug (No JS)</title>
+  <title>Wheel – Numbered Debug (No JS, Rotated Overlay)</title>
 
   <style>
     body{
@@ -56,48 +56,45 @@
       <!-- wheel image -->
       <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
 
-      <!-- slice outlines (8) -->
-      <path class="slice-outline" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
-      <path class="slice-outline" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
-      <path class="slice-outline" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
-      <path class="slice-outline" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
-      <path class="slice-outline" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
-      <path class="slice-outline" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
-      <path class="slice-outline" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
-      <path class="slice-outline" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
+      <!-- OVERLAY (outlines + numbers) rotated -34deg to align with wheel -->
+      <g transform="rotate(-34 500 500)">
 
-      <!-- number badges (1–8) -->
-      <!-- 1 -->
-      <circle class="badge-circle" cx="500" cy="175" r="34"></circle>
-      <text class="badge-text" x="500" y="187">1</text>
+        <!-- slice outlines (8) -->
+        <path class="slice-outline" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
+        <path class="slice-outline" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
+        <path class="slice-outline" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
+        <path class="slice-outline" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
+        <path class="slice-outline" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
+        <path class="slice-outline" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
+        <path class="slice-outline" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
+        <path class="slice-outline" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
 
-      <!-- 2 -->
-      <circle class="badge-circle" cx="729.81" cy="270.19" r="34"></circle>
-      <text class="badge-text" x="729.81" y="282.19">2</text>
+        <!-- number badges (1–8) -->
+        <circle class="badge-circle" cx="500" cy="175" r="34"></circle>
+        <text class="badge-text" x="500" y="187">1</text>
 
-      <!-- 3 -->
-      <circle class="badge-circle" cx="825" cy="500" r="34"></circle>
-      <text class="badge-text" x="825" y="512">3</text>
+        <circle class="badge-circle" cx="729.81" cy="270.19" r="34"></circle>
+        <text class="badge-text" x="729.81" y="282.19">2</text>
 
-      <!-- 4 -->
-      <circle class="badge-circle" cx="729.81" cy="729.81" r="34"></circle>
-      <text class="badge-text" x="729.81" y="741.81">4</text>
+        <circle class="badge-circle" cx="825" cy="500" r="34"></circle>
+        <text class="badge-text" x="825" y="512">3</text>
 
-      <!-- 5 -->
-      <circle class="badge-circle" cx="500" cy="825" r="34"></circle>
-      <text class="badge-text" x="500" y="837">5</text>
+        <circle class="badge-circle" cx="729.81" cy="729.81" r="34"></circle>
+        <text class="badge-text" x="729.81" y="741.81">4</text>
 
-      <!-- 6 -->
-      <circle class="badge-circle" cx="270.19" cy="729.81" r="34"></circle>
-      <text class="badge-text" x="270.19" y="741.81">6</text>
+        <circle class="badge-circle" cx="500" cy="825" r="34"></circle>
+        <text class="badge-text" x="500" y="837">5</text>
 
-      <!-- 7 -->
-      <circle class="badge-circle" cx="175" cy="500" r="34"></circle>
-      <text class="badge-text" x="175" y="512">7</text>
+        <circle class="badge-circle" cx="270.19" cy="729.81" r="34"></circle>
+        <text class="badge-text" x="270.19" y="741.81">6</text>
 
-      <!-- 8 -->
-      <circle class="badge-circle" cx="270.19" cy="270.19" r="34"></circle>
-      <text class="badge-text" x="270.19" y="282.19">8</text>
+        <circle class="badge-circle" cx="175" cy="500" r="34"></circle>
+        <text class="badge-text" x="175" y="512">7</text>
+
+        <circle class="badge-circle" cx="270.19" cy="270.19" r="34"></circle>
+        <text class="badge-text" x="270.19" y="282.19">8</text>
+
+      </g>
     </svg>
   </div>
 </body>

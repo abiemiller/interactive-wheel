@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wheel – Numbered Debug</title>
+  <title>Wheel – Numbered Debug (No JS)</title>
 
   <style>
     body{
@@ -12,28 +12,30 @@
       justify-content:center;
       align-items:center;
       min-height:100vh;
-      font-family:Arial, sans-serif;
+      font-family: Arial, sans-serif;
+      background:#fff;
     }
     .stage{
-      width:min(640px,96vw);
+      width:min(680px, 96vw);
       padding:12px;
     }
     svg{
       width:100%;
       height:auto;
       display:block;
-      aspect-ratio:1/1;
+      aspect-ratio: 1 / 1;
       user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* faint outlines so we can confirm slices exist */
+    /* faint outlines so you can see the slice boundaries */
     .slice-outline{
       fill: rgba(255,255,255,0);
-      stroke: rgba(0,0,0,0.15);
+      stroke: rgba(0,0,0,0.18);
       stroke-width: 2;
     }
 
-    /* number badge */
+    /* big number badges */
     .badge-circle{
       fill: rgba(255,255,255,0.95);
       stroke: rgba(0,0,0,0.25);
@@ -42,7 +44,7 @@
     .badge-text{
       fill:#000;
       font-size:36px;
-      font-weight:700;
+      font-weight:800;
       text-anchor:middle;
     }
   </style>
@@ -51,96 +53,52 @@
 <body>
   <div class="stage">
     <svg viewBox="0 0 1000 1000" aria-label="Numbered Literacy Wheel">
-      <!-- Wheel image -->
+      <!-- wheel image -->
       <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
 
-      <!-- Outlines and badges go ABOVE the image -->
-      <g id="outlines"></g>
-      <g id="badges"></g>
+      <!-- slice outlines (8) -->
+      <path class="slice-outline" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
+      <path class="slice-outline" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
+      <path class="slice-outline" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
+      <path class="slice-outline" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
+      <path class="slice-outline" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
+      <path class="slice-outline" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
+      <path class="slice-outline" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
+      <path class="slice-outline" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
+
+      <!-- number badges (1–8) -->
+      <!-- 1 -->
+      <circle class="badge-circle" cx="500" cy="175" r="34"></circle>
+      <text class="badge-text" x="500" y="187">1</text>
+
+      <!-- 2 -->
+      <circle class="badge-circle" cx="729.81" cy="270.19" r="34"></circle>
+      <text class="badge-text" x="729.81" y="282.19">2</text>
+
+      <!-- 3 -->
+      <circle class="badge-circle" cx="825" cy="500" r="34"></circle>
+      <text class="badge-text" x="825" y="512">3</text>
+
+      <!-- 4 -->
+      <circle class="badge-circle" cx="729.81" cy="729.81" r="34"></circle>
+      <text class="badge-text" x="729.81" y="741.81">4</text>
+
+      <!-- 5 -->
+      <circle class="badge-circle" cx="500" cy="825" r="34"></circle>
+      <text class="badge-text" x="500" y="837">5</text>
+
+      <!-- 6 -->
+      <circle class="badge-circle" cx="270.19" cy="729.81" r="34"></circle>
+      <text class="badge-text" x="270.19" y="741.81">6</text>
+
+      <!-- 7 -->
+      <circle class="badge-circle" cx="175" cy="500" r="34"></circle>
+      <text class="badge-text" x="175" y="512">7</text>
+
+      <!-- 8 -->
+      <circle class="badge-circle" cx="270.19" cy="270.19" r="34"></circle>
+      <text class="badge-text" x="270.19" y="282.19">8</text>
     </svg>
   </div>
-
-  <script>
-    const cx = 500, cy = 500;
-
-    // Adjust these if needed (usually fine as-is)
-    const rInner = 180;
-    const rOuter = 470;
-
-    const sliceSize = 45;
-    const half = sliceSize / 2;
-
-    // Matches your original CSS logic: 0° is right, + is clockwise
-    const centers = [
-      -90,  // 1
-      -45,  // 2
-       0,   // 3
-       45,  // 4
-       90,  // 5
-       135, // 6
-       180, // 7
-      -135  // 8
-    ];
-
-    function polar(r, deg){
-      const rad = deg * Math.PI / 180;
-      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-    }
-
-    function wedgePath(start, end){
-      const p1 = polar(rOuter, start);
-      const p2 = polar(rOuter, end);
-      const p3 = polar(rInner, end);
-      const p4 = polar(rInner, start);
-
-      // For 45° slices, largeArc is always 0, but keep it correct anyway:
-      const sweep = ((end - start) % 360 + 360) % 360;
-      const largeArc = sweep > 180 ? 1 : 0;
-
-      return [
-        `M ${p1.x} ${p1.y}`,
-        `A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
-        `L ${p3.x} ${p3.y}`,
-        `A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
-        `Z`
-      ].join(" ");
-    }
-
-    const outlines = document.getElementById("outlines");
-    const badges = document.getElementById("badges");
-
-    centers.forEach((c, idx) => {
-      const start = c - half;
-      const end = c + half;
-
-      // 1) Slice outline
-      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-      path.setAttribute("d", wedgePath(start, end));
-      path.setAttribute("class","slice-outline");
-      outlines.appendChild(path);
-
-      // 2) Number badge (circle + text)
-      const mid = polar((rInner + rOuter)/2, c);
-
-      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-
-      const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-      circle.setAttribute("cx", mid.x);
-      circle.setAttribute("cy", mid.y);
-      circle.setAttribute("r", 34);
-      circle.setAttribute("class", "badge-circle");
-
-      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
-      text.setAttribute("x", mid.x);
-      // Instead of dominant-baseline, use a small y offset:
-      text.setAttribute("y", mid.y + 12);
-      text.setAttribute("class", "badge-text");
-      text.textContent = String(idx + 1);
-
-      g.appendChild(circle);
-      g.appendChild(text);
-      badges.appendChild(g);
-    });
-  </script>
 </body>
 </html>

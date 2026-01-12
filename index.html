@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Literacy Wheel</title>
+  <title>Literacy Wheel – Numbered Debug</title>
 
   <style>
     body{
@@ -16,8 +16,8 @@
     }
 
     .stage{
-      width: min(640px, 96vw);
-      padding: 12px;
+      width:min(640px,96vw);
+      padding:12px;
     }
 
     svg{
@@ -25,193 +25,113 @@
       height:auto;
       display:block;
       aspect-ratio:1/1;
-      touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
       user-select:none;
     }
 
-    a{ cursor:pointer; }
-
-    /* NO GLOW / NO HIGHLIGHT: keep hit areas fully invisible */
-    .hit, .center-hit{
+    /* Make slices clickable but invisible */
+    .slice{
       fill: rgba(255,255,255,0);
       stroke: rgba(255,255,255,0);
-      stroke-width: 0;
+    }
+
+    /* Number labels */
+    .label{
+      font-size:36px;
+      font-weight:bold;
+      fill:#000;
+      text-anchor:middle;
+      dominant-baseline:middle;
+      pointer-events:none;
+      background:white;
     }
   </style>
 </head>
 
 <body>
   <div class="stage">
-    <svg viewBox="0 0 1000 1000" role="img" aria-label="Interactive Literacy Wheel">
-      <!-- ROTOR: everything that spins -->
-      <g id="rotor">
-        <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
-        <g id="slices"></g>
-        <g id="rims"></g>
-      </g>
+    <svg viewBox="0 0 1000 1000" aria-label="Numbered Literacy Wheel">
 
-      <!-- CENTER: stays “clickable” for spinning -->
-      <circle id="centerCircle" class="center-hit" cx="500" cy="500" r="150"></circle>
+      <!-- Wheel image -->
+      <image href="Wheel.png"
+             x="0" y="0"
+             width="1000" height="1000"
+             preserveAspectRatio="xMidYMid meet" />
+
+      <!-- Slices -->
+      <g id="slices"></g>
+      <g id="labels"></g>
+
     </svg>
   </div>
 
   <script>
-    // ---------------- Helpers ----------------
-    // IMPORTANT: match your original CSS angle system:
-    // 0deg = 3 o'clock (pointing right), 90deg = 6 o'clock (down), -90deg = 12 o'clock (up)
-    function polarToXY(cx, cy, r, deg){
-      const rad = deg * Math.PI / 180;
-      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
-    }
-
-    function annularSectorPath(cx, cy, rInner, rOuter, startDeg, endDeg){
-      const p1 = polarToXY(cx, cy, rOuter, startDeg);
-      const p2 = polarToXY(cx, cy, rOuter, endDeg);
-      const p3 = polarToXY(cx, cy, rInner, endDeg);
-      const p4 = polarToXY(cx, cy, rInner, startDeg);
-
-      const sweep = ((endDeg - startDeg) % 360 + 360) % 360;
-      const largeArc = sweep > 180 ? 1 : 0;
-
-      return [
-        `M ${p1.x} ${p1.y}`,
-        `A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
-        `L ${p3.x} ${p3.y}`,
-        `A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
-        "Z"
-      ].join(" ");
-    }
-
-    function makeSvgEl(tag){
-      return document.createElementNS("http://www.w3.org/2000/svg", tag);
-    }
-
-    // ---------------- Your slice links (1–8) ----------------
-    const sliceLinks = [
-      { label: "Culturally and Linguistically Responsive", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive" },
-      { label: "Assessment", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment" },
-      { label: "Phonological Awareness", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness" },
-      { label: "Phonics and Spelling", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling" },
-      { label: "Vocabulary and Morphology", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology" },
-      { label: "Syntax", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax" },
-      { label: "Cross Linguistic Connections", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections" },
-      { label: "Text Comprehension and Written Expression", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression" },
-    ];
-
-    // Match your original “pill hotspot” angles:
-    // 1:-90, 2:-45, 3:0, 4:45, 5:90, 6:135, 7:180, 8:-135
-  const centers = [-45, 0, 45, 90, 135, 180, 225, -90];
-
-    // ---------------- Build wedges + rims ----------------
     const cx = 500, cy = 500;
+    const rInner = 180;
+    const rOuter = 470;
+    const sliceSize = 45; // degrees per slice
+    const half = sliceSize / 2;
 
-    // If clicks feel too close/too far, tweak these:
-    const rInner = 190;
-    const rOuter = 465;
-    const halfSpan = 22.5; // 45° per slice
-
-    const slicesGroup = document.getElementById("slices");
-
-    sliceLinks.forEach((s, i) => {
-      const c = centers[i];
-      const start = c - halfSpan;
-      const end   = c + halfSpan;
-
-      const a = makeSvgEl("a");
-      a.setAttribute("href", s.href);
-      a.setAttribute("target", "_blank");
-      a.setAttribute("rel", "noopener");
-      a.setAttribute("aria-label", s.label);
-
-      const p = makeSvgEl("path");
-      p.setAttribute("d", annularSectorPath(cx, cy, rInner, rOuter, start, end));
-      p.setAttribute("class", "hit");
-
-      a.appendChild(p);
-      slicesGroup.appendChild(a);
-    });
-
-    // Rim links (still optional; adjust if you want different destinations)
-    const rimsGroup = document.getElementById("rims");
-    const rimInner = 470;
-    const rimOuter = 495;
-
-    const rimLinks = [
-      {
-        label: "Oral Language Development and Academic Language",
-        href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/oral-language-development-and-academic-language",
-        start: 200,
-        end: 340
-      },
-      {
-        label: "Literacy for MLs Home",
-        href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls",
-        start: 20,
-        end: 160
-      }
+    // IMPORTANT:
+    // This matches your ORIGINAL CSS logic:
+    // 0° = right (3 o'clock)
+    // positive = clockwise
+    const centers = [
+      -90,  // 1
+      -45,  // 2
+       0,   // 3
+       45,  // 4
+       90,  // 5
+       135, // 6
+       180, // 7
+      -135  // 8
     ];
 
-    rimLinks.forEach(r => {
-      const a = makeSvgEl("a");
-      a.setAttribute("href", r.href);
-      a.setAttribute("target", "_blank");
-      a.setAttribute("rel", "noopener");
-      a.setAttribute("aria-label", r.label);
+    function polar(cx, cy, r, deg){
+      const rad = deg * Math.PI / 180;
+      return {
+        x: cx + r * Math.cos(rad),
+        y: cy + r * Math.sin(rad)
+      };
+    }
 
-      const p = makeSvgEl("path");
-      p.setAttribute("d", annularSectorPath(cx, cy, rimInner, rimOuter, r.start, r.end));
-      p.setAttribute("class", "hit");
+    function wedgePath(start, end){
+      const p1 = polar(cx, cy, rOuter, start);
+      const p2 = polar(cx, cy, rOuter, end);
+      const p3 = polar(cx, cy, rInner, end);
+      const p4 = polar(cx, cy, rInner, start);
+      const large = end - start > 180 ? 1 : 0;
 
-      a.appendChild(p);
-      rimsGroup.appendChild(a);
+      return `
+        M ${p1.x} ${p1.y}
+        A ${rOuter} ${rOuter} 0 ${large} 1 ${p2.x} ${p2.y}
+        L ${p3.x} ${p3.y}
+        A ${rInner} ${rInner} 0 ${large} 0 ${p4.x} ${p4.y}
+        Z
+      `;
+    }
+
+    const sliceGroup = document.getElementById("slices");
+    const labelGroup = document.getElementById("labels");
+
+    centers.forEach((c, i) => {
+      const start = c - half;
+      const end = c + half;
+
+      // slice path
+      const path = document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d", wedgePath(start, end));
+      path.setAttribute("class","slice");
+      sliceGroup.appendChild(path);
+
+      // number label
+      const mid = polar(cx, cy, (rInner + rOuter)/2, c);
+      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("x", mid.x);
+      text.setAttribute("y", mid.y);
+      text.setAttribute("class","label");
+      text.textContent = (i + 1);
+      labelGroup.appendChild(text);
     });
-
-    // ---------------- Spin (tap/click center) ----------------
-    const rotor = document.getElementById("rotor");
-    const centerCircle = document.getElementById("centerCircle");
-
-    let angle = 0;
-    let velocity = 0;
-    let spinning = false;
-    let rafId = null;
-
-    function render(){
-      rotor.setAttribute("transform", `rotate(${angle} ${cx} ${cy})`);
-    }
-
-    function tick(){
-      if(!spinning) return;
-
-      velocity *= 0.985;         // friction
-      angle = (angle + velocity) % 360;
-
-      render();
-
-      if(Math.abs(velocity) < 0.05){
-        spinning = false;
-        velocity = 0;
-        return;
-      }
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function spin(){
-      const kick = 18 + Math.random() * 10; // spin strength
-      velocity += kick;
-      if(!spinning){
-        spinning = true;
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(tick);
-      }
-    }
-
-    centerCircle.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      spin();
-    });
-
-    render();
   </script>
 </body>
 </html>

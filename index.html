@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wheel – Numbered Debug (Adjusted)</title>
+  <title>Interactive Literacy Wheel</title>
 
   <style>
     body{
@@ -15,10 +15,12 @@
       font-family: Arial, sans-serif;
       background:#fff;
     }
+
     .stage{
       width:min(680px, 96vw);
       padding:12px;
     }
+
     svg{
       width:100%;
       height:auto;
@@ -26,79 +28,127 @@
       aspect-ratio: 1 / 1;
       user-select:none;
       -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
     }
 
-    /* faint outlines so you can see the slice boundaries */
-    .slice-outline{
+    /* Make the image not block clicks */
+    image{ pointer-events:none; }
+
+    /* NO glow / NO highlight: hit areas fully invisible */
+    .hit, .center-hit{
       fill: rgba(255,255,255,0);
-      stroke: rgba(0,0,0,0.18);
-      stroke-width: 2;
-    }
-
-    /* big number badges */
-    .badge-circle{
-      fill: rgba(255,255,255,0.95);
-      stroke: rgba(0,0,0,0.25);
-      stroke-width: 2;
-    }
-    .badge-text{
-      fill:#000;
-      font-size:36px;
-      font-weight:800;
-      text-anchor:middle;
+      stroke: rgba(255,255,255,0);
+      stroke-width: 0;
     }
   </style>
 </head>
 
 <body>
   <div class="stage">
-    <svg viewBox="0 0 1000 1000" aria-label="Numbered Literacy Wheel">
-      <!-- wheel image -->
-      <image href="Wheel.png"
-             x="0" y="0"
-             width="1000" height="1000"
-             preserveAspectRatio="xMidYMid meet"></image>
+    <svg viewBox="0 0 1000 1000" aria-label="Interactive Literacy Wheel">
 
-      <!-- OVERLAY (outlines + numbers) rotated +23.5deg clockwise -->
-      <g transform="rotate(23.5 500 500)">
+      <!-- ROTOR: this group spins -->
+      <g id="rotor">
+        <!-- Wheel image -->
+        <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
 
-        <!-- slice outlines (8) -->
-        <path class="slice-outline" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
-        <path class="slice-outline" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
-        <path class="slice-outline" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
-        <path class="slice-outline" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
-        <path class="slice-outline" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
-        <path class="slice-outline" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
-        <path class="slice-outline" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
-        <path class="slice-outline" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
+        <!-- OVERLAY: slice hit-areas rotated to match your artwork -->
+        <g transform="rotate(23.5 500 500)">
 
-        <!-- number badges (1–8) -->
-        <circle class="badge-circle" cx="500" cy="175" r="34"></circle>
-        <text class="badge-text" x="500" y="187">1</text>
+          <!-- Slice 1 = Assessment -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment" target="_blank" rel="noopener" aria-label="Assessment">
+            <path class="hit" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="729.81" cy="270.19" r="34"></circle>
-        <text class="badge-text" x="729.81" y="282.19">2</text>
+          <!-- Slice 2 = Phonological Awareness -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness" target="_blank" rel="noopener" aria-label="Phonological Awareness">
+            <path class="hit" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="825" cy="500" r="34"></circle>
-        <text class="badge-text" x="825" y="512">3</text>
+          <!-- Slice 3 = Phonics and Spelling -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling" target="_blank" rel="noopener" aria-label="Phonics and Spelling">
+            <path class="hit" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="729.81" cy="729.81" r="34"></circle>
-        <text class="badge-text" x="729.81" y="741.81">4</text>
+          <!-- Slice 4 = Vocabulary and Morphology -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology" target="_blank" rel="noopener" aria-label="Vocabulary and Morphology">
+            <path class="hit" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="500" cy="825" r="34"></circle>
-        <text class="badge-text" x="500" y="837">5</text>
+          <!-- Slice 5 = Syntax -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax" target="_blank" rel="noopener" aria-label="Syntax">
+            <path class="hit" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="270.19" cy="729.81" r="34"></circle>
-        <text class="badge-text" x="270.19" y="741.81">6</text>
+          <!-- Slice 6 = Cross-Linguistic Connections -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections" target="_blank" rel="noopener" aria-label="Cross-Linguistic Connections">
+            <path class="hit" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="175" cy="500" r="34"></circle>
-        <text class="badge-text" x="175" y="512">7</text>
+          <!-- Slice 7 = Text Comprehension and Written Expression -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression" target="_blank" rel="noopener" aria-label="Text Comprehension and Written Expression">
+            <path class="hit" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
+          </a>
 
-        <circle class="badge-circle" cx="270.19" cy="270.19" r="34"></circle>
-        <text class="badge-text" x="270.19" y="282.19">8</text>
+          <!-- Slice 8 = Culturally and Linguistically Responsive -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive" target="_blank" rel="noopener" aria-label="Culturally and Linguistically Responsive">
+            <path class="hit" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
+          </a>
 
+        </g>
       </g>
+
+      <!-- CENTER: click/tap to spin (stays in place while wheel spins) -->
+      <circle id="centerSpin" class="center-hit" cx="500" cy="500" r="150"></circle>
     </svg>
   </div>
+
+  <script>
+    const rotor = document.getElementById("rotor");
+    const centerSpin = document.getElementById("centerSpin");
+
+    const cx = 500, cy = 500;
+    let angle = 0;
+    let velocity = 0;
+    let spinning = false;
+    let rafId = null;
+
+    function render(){
+      rotor.setAttribute("transform", `rotate(${angle} ${cx} ${cy})`);
+    }
+
+    function tick(){
+      if(!spinning) return;
+
+      velocity *= 0.985;            // friction
+      angle = (angle + velocity) % 360;
+      render();
+
+      if(Math.abs(velocity) < 0.05){
+        spinning = false;
+        velocity = 0;
+        return;
+      }
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function spin(){
+      const kick = 18 + Math.random() * 10; // spin strength
+      velocity += kick;
+
+      if(!spinning){
+        spinning = true;
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    centerSpin.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      spin();
+    });
+
+    render();
+  </script>
 </body>
 </html>

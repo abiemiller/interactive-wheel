@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Wheel</title>
+  <style>
+    body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:Arial,sans-serif;}
+    .wheel-stage{width:min(520px,92vw);}
+    .wheel{position:relative;width:100%;aspect-ratio:1/1;transform-origin:50% 50%;}
+    .wheel-img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;}
+    .hotspot{position:absolute;display:block;}
+    .hotspot.center{left:50%;top:50%;width:30%;height:30%;transform:translate(-50%,-50%);border-radius:50%;}
+    .hotspot.wedge{left:50%;top:50%;width:42%;height:18%;
+      transform:rotate(var(--angle)) translate(18%,-50%);
+      transform-origin:0% 50%;border-radius:999px;}
+    .hotspot.rim{left:50%;width:86%;height:14%;transform:translateX(-50%);border-radius:999px;}
+    .hotspot.rim.top{top:2.5%;}
+    .hotspot.rim.bottom{bottom:2.5%;}
+    .controls{display:flex;gap:10px;justify-content:center;margin-top:12px;}
+    button{padding:10px 14px;border-radius:10px;border:1px solid #ccc;background:#fff;cursor:pointer;}
+  </style>
+</head>
+<body>
+
+  <div class="wheel-stage">
+    <div id="wheel" class="wheel">
+      <!-- ✅ IMPORTANT: file name is EXACTLY Wheel.png -->
+      <img src="Wheel.png" alt="Wheel" class="wheel-img" />
+
+      <!-- CENTER -->
+      <a class="hotspot center" href="https://example.com/home" target="_blank" rel="noopener"></a>
+
+      <!-- WEDGES (8 slices) -->
+      <a class="hotspot wedge" style="--angle:-90deg" href="https://example.com/assessment" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:-45deg" href="https://example.com/phonological-awareness" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:0deg" href="https://example.com/phonics-spelling" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:45deg" href="https://example.com/vocabulary-morphology" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:90deg" href="https://example.com/syntax" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:135deg" href="https://example.com/cross-linguistic" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:180deg" href="https://example.com/text-comprehension" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" style="--angle:-135deg" href="https://example.com/culturally-linguistically-responsive" target="_blank" rel="noopener"></a>
+
+      <!-- RIMS -->
+      <a class="hotspot rim top" href="https://example.com/oral-language" target="_blank" rel="noopener"></a>
+      <a class="hotspot rim bottom" href="https://example.com/rooted-in-research" target="_blank" rel="noopener"></a>
+    </div>
+
+    <div class="controls">
+      <button id="spinBtn" type="button">Spin</button>
+      <button id="stopBtn" type="button">Stop</button>
+    </div>
+  </div>
+
+  <script>
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spinBtn");
+    const stopBtn = document.getElementById("stopBtn");
+
+    let angle = 0, velocity = 0, spinning = false, rafId = null;
+
+    function animate(){
+      if(!spinning) return;
+      velocity *= 0.985;
+      angle = (angle + velocity) % 360;
+      wheel.style.transform = `rotate(${angle}deg)`;
+      if(Math.abs(velocity) < 0.05){ spinning=false; velocity=0; return; }
+      rafId = requestAnimationFrame(animate);
+    }
+    function spin(){
+      velocity = 18 + Math.random() * 10;
+      spinning = true;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(animate);
+    }
+    function stop(){
+      spinning = false;
+      velocity = 0;
+      cancelAnimationFrame(rafId);
+    }
+    spinBtn.addEventListener("click", spin);
+    stopBtn.addEventListener("click", stop);
+  </script>
+
+</body>
+</html>

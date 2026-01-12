@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Interactive Wheel</title>
+  <title>Interactive Literacy Wheel</title>
 
   <style>
     body{
@@ -15,7 +15,9 @@
       font-family:Arial, sans-serif;
     }
 
-    .wheel-stage{ width:min(520px,92vw); }
+    .wheel-stage{
+      width:min(520px,92vw);
+    }
 
     .wheel{
       position:relative;
@@ -32,13 +34,14 @@
       pointer-events:none;
     }
 
+    /* Hotspots */
     .hotspot{
       position:absolute;
       display:block;
       text-decoration:none;
     }
 
-    /* Center hotspot */
+    /* Center */
     .hotspot.center{
       left:50%;
       top:50%;
@@ -48,7 +51,7 @@
       border-radius:50%;
     }
 
-    /* Wedge hotspots (pill-shaped) */
+    /* Wedges */
     .hotspot.wedge{
       left:50%;
       top:50%;
@@ -59,7 +62,7 @@
       border-radius:999px;
     }
 
-    /* Rim hotspots */
+    /* Rims */
     .hotspot.rim{
       left:50%;
       width:86%;
@@ -70,7 +73,7 @@
     .hotspot.rim.top{ top:2.5%; }
     .hotspot.rim.bottom{ bottom:2.5%; }
 
-    /* Buttons */
+    /* Controls */
     .controls{
       display:flex;
       gap:10px;
@@ -84,75 +87,86 @@
       background:#fff;
       cursor:pointer;
     }
-
-    /* ===== DEBUG MODE (visualize hotspots + numbers) ===== */
-    .debug .hotspot{
-      outline: 2px dashed rgba(255,0,0,.75);
-      background: rgba(255,0,0,.10);
-    }
-    .tag{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform: translate(-50%,-50%);
-      font-weight:700;
-      font-size:18px;
-      color:#000;
-      background: rgba(255,255,255,.90);
-      border-radius:999px;
-      padding:4px 10px;
-      pointer-events:none; /* so clicks still go to the link */
-    }
   </style>
 </head>
 
 <body>
   <div class="wheel-stage">
-    <!-- Add class="debug" here to show outlines + numbers -->
-    <div id="wheel" class="wheel debug">
-      <img src="Wheel.png" alt="Wheel" class="wheel-img" />
+    <div id="wheel" class="wheel">
 
-      <!-- CENTER -->
-      <a class="hotspot center" href="https://example.com/home" target="_blank" rel="noopener" aria-label="Home"></a>
+      <!-- WHEEL IMAGE -->
+      <img src="Wheel.png" alt="Literacy for Multilingual Learners Wheel" class="wheel-img" />
 
-      <!-- WEDGES (numbers are real elements now) -->
-      <a class="hotspot wedge" style="--angle:-90deg" href="https://example.com/link1" target="_blank" rel="noopener" aria-label="Slice 1">
-        <span class="tag">1</span>
-      </a>
+      <!-- CENTER (HOME – update if needed) -->
+      <a class="hotspot center"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/home"
+         target="_blank" rel="noopener"
+         aria-label="Home"></a>
 
-      <a class="hotspot wedge" style="--angle:-45deg" href="https://example.com/link2" target="_blank" rel="noopener" aria-label="Slice 2">
-        <span class="tag">2</span>
-      </a>
+      <!-- SLICES (MATCHED TO YOUR MAP) -->
 
-      <a class="hotspot wedge" style="--angle:0deg" href="https://example.com/link3" target="_blank" rel="noopener" aria-label="Slice 3">
-        <span class="tag">3</span>
-      </a>
+      <!-- 1: Culturally & Linguistically Responsive -->
+      <a class="hotspot wedge" style="--angle:-90deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
+         target="_blank" rel="noopener"
+         aria-label="Culturally and Linguistically Responsive"></a>
 
-      <a class="hotspot wedge" style="--angle:45deg" href="https://example.com/link4" target="_blank" rel="noopener" aria-label="Slice 4">
-        <span class="tag">4</span>
-      </a>
+      <!-- 2: Assessment -->
+      <a class="hotspot wedge" style="--angle:-45deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"
+         target="_blank" rel="noopener"
+         aria-label="Assessment"></a>
 
-      <a class="hotspot wedge" style="--angle:90deg" href="https://example.com/link5" target="_blank" rel="noopener" aria-label="Slice 5">
-        <span class="tag">5</span>
-      </a>
+      <!-- 3: Phonological Awareness -->
+      <a class="hotspot wedge" style="--angle:0deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
+         target="_blank" rel="noopener"
+         aria-label="Phonological Awareness"></a>
 
-      <a class="hotspot wedge" style="--angle:135deg" href="https://example.com/link6" target="_blank" rel="noopener" aria-label="Slice 6">
-        <span class="tag">6</span>
-      </a>
+      <!-- 4: Phonics & Spelling -->
+      <a class="hotspot wedge" style="--angle:45deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
+         target="_blank" rel="noopener"
+         aria-label="Phonics and Spelling"></a>
 
-      <a class="hotspot wedge" style="--angle:180deg" href="https://example.com/link7" target="_blank" rel="noopener" aria-label="Slice 7">
-        <span class="tag">7</span>
-      </a>
+      <!-- 5: Vocabulary & Morphology -->
+      <a class="hotspot wedge" style="--angle:90deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
+         target="_blank" rel="noopener"
+         aria-label="Vocabulary and Morphology"></a>
 
-      <a class="hotspot wedge" style="--angle:-135deg" href="https://example.com/link8" target="_blank" rel="noopener" aria-label="Slice 8">
-        <span class="tag">8</span>
-      </a>
+      <!-- 6: Syntax -->
+      <a class="hotspot wedge" style="--angle:135deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
+         target="_blank" rel="noopener"
+         aria-label="Syntax"></a>
 
-      <!-- RIMS -->
-      <a class="hotspot rim top" href="https://example.com/top-rim" target="_blank" rel="noopener" aria-label="Top Rim"></a>
-      <a class="hotspot rim bottom" href="https://example.com/bottom-rim" target="_blank" rel="noopener" aria-label="Bottom Rim"></a>
+      <!-- 7: Cross-Linguistic Connections -->
+      <a class="hotspot wedge" style="--angle:180deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
+         target="_blank" rel="noopener"
+         aria-label="Cross Linguistic Connections"></a>
+
+      <!-- 8: Text Comprehension & Written Expression -->
+      <a class="hotspot wedge" style="--angle:-135deg"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
+         target="_blank" rel="noopener"
+         aria-label="Text Comprehension and Written Expression"></a>
+
+      <!-- RIMS (update if/when you want) -->
+      <a class="hotspot rim top"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/oral-language-development-and-academic-language"
+         target="_blank" rel="noopener"
+         aria-label="Oral Language Development and Academic Language"></a>
+
+      <a class="hotspot rim bottom"
+         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls"
+         target="_blank" rel="noopener"
+         aria-label="Rooted in Research, Responsive to Multilingual Learners"></a>
+
     </div>
 
+    <!-- Spin controls (optional – can remove later) -->
     <div class="controls">
       <button id="spinBtn" type="button">Spin</button>
       <button id="stopBtn" type="button">Stop</button>
@@ -171,7 +185,11 @@
       velocity *= 0.985;
       angle = (angle + velocity) % 360;
       wheel.style.transform = `rotate(${angle}deg)`;
-      if(Math.abs(velocity) < 0.05){ spinning=false; velocity=0; return; }
+      if(Math.abs(velocity) < 0.05){
+        spinning = false;
+        velocity = 0;
+        return;
+      }
       rafId = requestAnimationFrame(animate);
     }
 

@@ -35,11 +35,12 @@
 
     .hit{
       fill: rgba(255,255,255,0);
-      stroke: none;
+      stroke: none;            /* no lines */
       pointer-events: all;
       cursor: pointer;
     }
 
+    /* Brighter soft glow */
     @media (hover:hover){
       .hit:hover{
         fill: rgba(255,255,255,0.14);
@@ -62,6 +63,10 @@
       pointer-events: all;
       cursor: pointer;
     }
+    @media (hover:hover){
+      .center-hit:hover{ filter: url(#softGlow); }
+    }
+    .center-hit:active{ filter: url(#softGlow); }
   </style>
 </head>
 
@@ -78,72 +83,75 @@
         </filter>
       </defs>
 
+      <!-- ROTOR spins -->
       <g id="rotor">
         <image href="Wheel.png" x="0" y="0" width="1000" height="1000"
                preserveAspectRatio="xMidYMid meet"></image>
 
+        <!-- overlay aligned to your artwork -->
         <g transform="rotate(23.5 500 500)">
 
-          <!-- 1 → Phonological Awareness -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
-             target="_blank">
-            <path class="hit" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"/>
-          </a>
-
-          <!-- 2 → Phonics & Spelling -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
-             target="_blank">
-            <path class="hit" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"/>
-          </a>
-
-          <!-- 3 → Vocabulary & Morphology -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
-             target="_blank">
-            <path class="hit" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"/>
-          </a>
-
-          <!-- 4 → Syntax -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
-             target="_blank">
-            <path class="hit" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"/>
-          </a>
-
-          <!-- 5 → Cross-Linguistic Connections -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
-             target="_blank">
-            <path class="hit" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"/>
-          </a>
-
-          <!-- 6 → Text Comprehension & Written Expression -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
-             target="_blank">
-            <path class="hit" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"/>
-          </a>
-
-          <!-- 7 → Culturally & Linguistically Responsive -->
-          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
-             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
-             target="_blank">
-            <path class="hit" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"/>
-          </a>
-
-          <!-- 8 → Assessment -->
+          <!-- Slice 1 = Assessment -->
           <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"
              xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"
-             target="_blank">
-            <path class="hit" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"/>
+             target="_blank" rel="noopener" aria-label="Assessment">
+            <path class="hit" d="M 320.14 65.78 A 470 470 0 0 1 679.86 65.78 L 568.88 333.70 A 180 180 0 0 0 431.12 333.70 Z"></path>
+          </a>
+
+          <!-- Slice 2 = Phonological Awareness -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
+             target="_blank" rel="noopener" aria-label="Phonological Awareness">
+            <path class="hit" d="M 679.86 65.78 A 470 470 0 0 1 934.22 320.14 L 666.30 431.12 A 180 180 0 0 0 568.88 333.70 Z"></path>
+          </a>
+
+          <!-- Slice 3 = Phonics & Spelling -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
+             target="_blank" rel="noopener" aria-label="Phonics and Spelling">
+            <path class="hit" d="M 934.22 320.14 A 470 470 0 0 1 934.22 679.86 L 666.30 568.88 A 180 180 0 0 0 666.30 431.12 Z"></path>
+          </a>
+
+          <!-- Slice 4 = Vocabulary & Morphology -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
+             target="_blank" rel="noopener" aria-label="Vocabulary and Morphology">
+            <path class="hit" d="M 934.22 679.86 A 470 470 0 0 1 679.86 934.22 L 568.88 666.30 A 180 180 0 0 0 666.30 568.88 Z"></path>
+          </a>
+
+          <!-- Slice 5 = Syntax -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
+             target="_blank" rel="noopener" aria-label="Syntax">
+            <path class="hit" d="M 679.86 934.22 A 470 470 0 0 1 320.14 934.22 L 431.12 666.30 A 180 180 0 0 0 568.88 666.30 Z"></path>
+          </a>
+
+          <!-- Slice 6 = Cross-Linguistic Connections -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
+             target="_blank" rel="noopener" aria-label="Cross-Linguistic Connections">
+            <path class="hit" d="M 320.14 934.22 A 470 470 0 0 1 65.78 679.86 L 333.70 568.88 A 180 180 0 0 0 431.12 666.30 Z"></path>
+          </a>
+
+          <!-- Slice 7 = Text Comprehension & Written Expression -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
+             target="_blank" rel="noopener" aria-label="Text Comprehension and Written Expression">
+            <path class="hit" d="M 65.78 679.86 A 470 470 0 0 1 65.78 320.14 L 333.70 431.12 A 180 180 0 0 0 333.70 568.88 Z"></path>
+          </a>
+
+          <!-- Slice 8 = Culturally & Linguistically Responsive -->
+          <a href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
+             xlink:href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
+             target="_blank" rel="noopener" aria-label="Culturally and Linguistically Responsive">
+            <path class="hit" d="M 65.78 320.14 A 470 470 0 0 1 320.14 65.78 L 431.12 333.70 A 180 180 0 0 0 333.70 431.12 Z"></path>
           </a>
 
         </g>
       </g>
 
-      <circle id="centerSpin" class="center-hit" cx="500" cy="500" r="150"/>
+      <!-- Center click to spin -->
+      <circle id="centerSpin" class="center-hit" cx="500" cy="500" r="150"></circle>
     </svg>
   </div>
 
@@ -166,7 +174,7 @@
       requestAnimationFrame(tick);
     }
 
-    centerSpin.addEventListener("pointerdown", e => {
+    centerSpin.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       velocity += 18 + Math.random()*10;
       if(!spinning){ spinning = true; requestAnimationFrame(tick); }

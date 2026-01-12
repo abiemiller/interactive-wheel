@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Literacy Wheel – Numbered Debug</title>
+  <title>Wheel – Numbered Debug</title>
 
   <style>
     body{
@@ -14,12 +14,10 @@
       min-height:100vh;
       font-family:Arial, sans-serif;
     }
-
     .stage{
       width:min(640px,96vw);
       padding:12px;
     }
-
     svg{
       width:100%;
       height:auto;
@@ -28,21 +26,24 @@
       user-select:none;
     }
 
-    /* Make slices clickable but invisible */
-    .slice{
+    /* faint outlines so we can confirm slices exist */
+    .slice-outline{
       fill: rgba(255,255,255,0);
-      stroke: rgba(255,255,255,0);
+      stroke: rgba(0,0,0,0.15);
+      stroke-width: 2;
     }
 
-    /* Number labels */
-    .label{
-      font-size:36px;
-      font-weight:bold;
+    /* number badge */
+    .badge-circle{
+      fill: rgba(255,255,255,0.95);
+      stroke: rgba(0,0,0,0.25);
+      stroke-width: 2;
+    }
+    .badge-text{
       fill:#000;
+      font-size:36px;
+      font-weight:700;
       text-anchor:middle;
-      dominant-baseline:middle;
-      pointer-events:none;
-      background:white;
     }
   </style>
 </head>
@@ -50,31 +51,26 @@
 <body>
   <div class="stage">
     <svg viewBox="0 0 1000 1000" aria-label="Numbered Literacy Wheel">
-
       <!-- Wheel image -->
-      <image href="Wheel.png"
-             x="0" y="0"
-             width="1000" height="1000"
-             preserveAspectRatio="xMidYMid meet" />
+      <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
 
-      <!-- Slices -->
-      <g id="slices"></g>
-      <g id="labels"></g>
-
+      <!-- Outlines and badges go ABOVE the image -->
+      <g id="outlines"></g>
+      <g id="badges"></g>
     </svg>
   </div>
 
   <script>
     const cx = 500, cy = 500;
+
+    // Adjust these if needed (usually fine as-is)
     const rInner = 180;
     const rOuter = 470;
-    const sliceSize = 45; // degrees per slice
+
+    const sliceSize = 45;
     const half = sliceSize / 2;
 
-    // IMPORTANT:
-    // This matches your ORIGINAL CSS logic:
-    // 0° = right (3 o'clock)
-    // positive = clockwise
+    // Matches your original CSS logic: 0° is right, + is clockwise
     const centers = [
       -90,  // 1
       -45,  // 2
@@ -86,51 +82,64 @@
       -135  // 8
     ];
 
-    function polar(cx, cy, r, deg){
+    function polar(r, deg){
       const rad = deg * Math.PI / 180;
-      return {
-        x: cx + r * Math.cos(rad),
-        y: cy + r * Math.sin(rad)
-      };
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
     }
 
     function wedgePath(start, end){
-      const p1 = polar(cx, cy, rOuter, start);
-      const p2 = polar(cx, cy, rOuter, end);
-      const p3 = polar(cx, cy, rInner, end);
-      const p4 = polar(cx, cy, rInner, start);
-      const large = end - start > 180 ? 1 : 0;
+      const p1 = polar(rOuter, start);
+      const p2 = polar(rOuter, end);
+      const p3 = polar(rInner, end);
+      const p4 = polar(rInner, start);
 
-      return `
-        M ${p1.x} ${p1.y}
-        A ${rOuter} ${rOuter} 0 ${large} 1 ${p2.x} ${p2.y}
-        L ${p3.x} ${p3.y}
-        A ${rInner} ${rInner} 0 ${large} 0 ${p4.x} ${p4.y}
-        Z
-      `;
+      // For 45° slices, largeArc is always 0, but keep it correct anyway:
+      const sweep = ((end - start) % 360 + 360) % 360;
+      const largeArc = sweep > 180 ? 1 : 0;
+
+      return [
+        `M ${p1.x} ${p1.y}`,
+        `A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
+        `L ${p3.x} ${p3.y}`,
+        `A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
+        `Z`
+      ].join(" ");
     }
 
-    const sliceGroup = document.getElementById("slices");
-    const labelGroup = document.getElementById("labels");
+    const outlines = document.getElementById("outlines");
+    const badges = document.getElementById("badges");
 
-    centers.forEach((c, i) => {
+    centers.forEach((c, idx) => {
       const start = c - half;
       const end = c + half;
 
-      // slice path
+      // 1) Slice outline
       const path = document.createElementNS("http://www.w3.org/2000/svg","path");
       path.setAttribute("d", wedgePath(start, end));
-      path.setAttribute("class","slice");
-      sliceGroup.appendChild(path);
+      path.setAttribute("class","slice-outline");
+      outlines.appendChild(path);
 
-      // number label
-      const mid = polar(cx, cy, (rInner + rOuter)/2, c);
+      // 2) Number badge (circle + text)
+      const mid = polar((rInner + rOuter)/2, c);
+
+      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+
+      const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+      circle.setAttribute("cx", mid.x);
+      circle.setAttribute("cy", mid.y);
+      circle.setAttribute("r", 34);
+      circle.setAttribute("class", "badge-circle");
+
       const text = document.createElementNS("http://www.w3.org/2000/svg","text");
       text.setAttribute("x", mid.x);
-      text.setAttribute("y", mid.y);
-      text.setAttribute("class","label");
-      text.textContent = (i + 1);
-      labelGroup.appendChild(text);
+      // Instead of dominant-baseline, use a small y offset:
+      text.setAttribute("y", mid.y + 12);
+      text.setAttribute("class", "badge-text");
+      text.textContent = String(idx + 1);
+
+      g.appendChild(circle);
+      g.appendChild(text);
+      badges.appendChild(g);
     });
   </script>
 </body>

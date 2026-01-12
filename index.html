@@ -32,52 +32,11 @@
 
     a{ cursor:pointer; }
 
-    /* Hit areas are invisible until hover/active */
-    .hit{
+    /* NO GLOW / NO HIGHLIGHT: keep hit areas fully invisible */
+    .hit, .center-hit{
       fill: rgba(255,255,255,0);
       stroke: rgba(255,255,255,0);
-      stroke-width: 3;
-      transition: fill .12s ease, stroke .12s ease;
-    }
-
-    /* Desktop hover highlight */
-    @media (hover:hover){
-      .hit:hover{
-        fill: rgba(255,255,255,0.22);
-        stroke: rgba(255,255,255,0.70);
-      }
-    }
-
-    /* Keyboard focus */
-    a:focus-visible .hit{
-      fill: rgba(255,255,255,0.25);
-      stroke: rgba(255,255,255,0.85);
-      outline:none;
-    }
-
-    /* Mobile tap feedback */
-    a:active .hit, .hit:active{
-      fill: rgba(255,255,255,0.30);
-      stroke: rgba(255,255,255,0.90);
-    }
-
-    /* Center "spin button" hover feedback (subtle) */
-    .center-hit{
-      fill: rgba(255,255,255,0);
-      stroke: rgba(255,255,255,0);
-      stroke-width: 3;
-      transition: fill .12s ease, stroke .12s ease;
-      cursor: pointer;
-    }
-    @media (hover:hover){
-      .center-hit:hover{
-        fill: rgba(255,255,255,0.18);
-        stroke: rgba(255,255,255,0.55);
-      }
-    }
-    .center-hit:active{
-      fill: rgba(255,255,255,0.26);
-      stroke: rgba(255,255,255,0.80);
+      stroke-width: 0;
     }
   </style>
 </head>
@@ -85,31 +44,24 @@
 <body>
   <div class="stage">
     <svg viewBox="0 0 1000 1000" role="img" aria-label="Interactive Literacy Wheel">
-
-      <!-- ROTOR: EVERYTHING THAT SHOULD SPIN GOES INSIDE THIS GROUP -->
+      <!-- ROTOR: everything that spins -->
       <g id="rotor">
-        <!-- Background image -->
         <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
-
-        <!-- Slice links (created by script) -->
         <g id="slices"></g>
-
-        <!-- Rim links (created by script) -->
         <g id="rims"></g>
       </g>
 
-      <!-- CENTER: DOES NOT SPIN; CLICK/TAP TO SPIN -->
-      <g id="centerControl" aria-label="Spin wheel">
-        <!-- This is the clickable/tappable center area -->
-        <circle id="centerCircle" class="center-hit" cx="500" cy="500" r="150"></circle>
-      </g>
+      <!-- CENTER: stays “clickable” for spinning -->
+      <circle id="centerCircle" class="center-hit" cx="500" cy="500" r="150"></circle>
     </svg>
   </div>
 
   <script>
     // ---------------- Helpers ----------------
+    // IMPORTANT: match your original CSS angle system:
+    // 0deg = 3 o'clock (pointing right), 90deg = 6 o'clock (down), -90deg = 12 o'clock (up)
     function polarToXY(cx, cy, r, deg){
-      const rad = (deg - 90) * Math.PI / 180; // -90 makes 0deg at 12 o'clock
+      const rad = deg * Math.PI / 180;
       return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
     }
 
@@ -135,7 +87,7 @@
       return document.createElementNS("http://www.w3.org/2000/svg", tag);
     }
 
-    // ---------------- Your Links (in your mapped order 1–8) ----------------
+    // ---------------- Your slice links (1–8) ----------------
     const sliceLinks = [
       { label: "Culturally and Linguistically Responsive", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive" },
       { label: "Assessment", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment" },
@@ -147,16 +99,17 @@
       { label: "Text Comprehension and Written Expression", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression" },
     ];
 
-    // These are the center angles that matched your wheel layout earlier:
+    // Match your original “pill hotspot” angles:
+    // 1:-90, 2:-45, 3:0, 4:45, 5:90, 6:135, 7:180, 8:-135
     const centers = [-90, -45, 0, 45, 90, 135, 180, -135];
 
-    // ---------------- Build Wedges + Rims ----------------
+    // ---------------- Build wedges + rims ----------------
     const cx = 500, cy = 500;
 
-    // If highlights are slightly in/out, tweak these two:
+    // If clicks feel too close/too far, tweak these:
     const rInner = 190;
     const rOuter = 465;
-    const halfSpan = 22.5; // 45° slices
+    const halfSpan = 22.5; // 45° per slice
 
     const slicesGroup = document.getElementById("slices");
 
@@ -179,7 +132,7 @@
       slicesGroup.appendChild(a);
     });
 
-    // Rim links (top and bottom arcs)
+    // Rim links (still optional; adjust if you want different destinations)
     const rimsGroup = document.getElementById("rims");
     const rimInner = 470;
     const rimOuter = 495;
@@ -214,12 +167,12 @@
       rimsGroup.appendChild(a);
     });
 
-    // ---------------- Spin Logic (no buttons) ----------------
+    // ---------------- Spin (tap/click center) ----------------
     const rotor = document.getElementById("rotor");
     const centerCircle = document.getElementById("centerCircle");
 
-    let angle = 0;        // degrees
-    let velocity = 0;     // degrees per frame-ish
+    let angle = 0;
+    let velocity = 0;
     let spinning = false;
     let rafId = null;
 
@@ -230,10 +183,9 @@
     function tick(){
       if(!spinning) return;
 
-      // friction
-      velocity *= 0.985;
-
+      velocity *= 0.985;         // friction
       angle = (angle + velocity) % 360;
+
       render();
 
       if(Math.abs(velocity) < 0.05){
@@ -245,10 +197,8 @@
     }
 
     function spin(){
-      // Add a fresh “kick” each time you tap
-      const kick = 18 + Math.random() * 10; // 18–28
+      const kick = 18 + Math.random() * 10; // spin strength
       velocity += kick;
-
       if(!spinning){
         spinning = true;
         cancelAnimationFrame(rafId);
@@ -256,24 +206,11 @@
       }
     }
 
-    // Single click/tap: spin
     centerCircle.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       spin();
     });
 
-    // Double-click / double-tap: go Home (optional)
-    const HOME_URL = "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/home";
-    let lastTap = 0;
-    centerCircle.addEventListener("pointerup", () => {
-      const now = Date.now();
-      if(now - lastTap < 320){
-        window.open(HOME_URL, "_blank", "noopener");
-      }
-      lastTap = now;
-    });
-
-    // Initial render
     render();
   </script>
 </body>

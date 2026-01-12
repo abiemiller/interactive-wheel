@@ -4,62 +4,165 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Wheel</title>
+
   <style>
-    body{margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:Arial,sans-serif;}
-    .wheel-stage{width:min(520px,92vw);}
-    .wheel{position:relative;width:100%;aspect-ratio:1/1;transform-origin:50% 50%;}
-    .wheel-img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;}
-    .hotspot{position:absolute;display:block;}
-    .hotspot.center{left:50%;top:50%;width:30%;height:30%;transform:translate(-50%,-50%);border-radius:50%;}
-    .hotspot.wedge{left:50%;top:50%;width:42%;height:18%;
-      transform:rotate(var(--angle)) translate(18%,-50%);
-      transform-origin:0% 50%;border-radius:999px;}
-    .hotspot.rim{left:50%;width:86%;height:14%;transform:translateX(-50%);border-radius:999px;}
-    .hotspot.rim.top{top:2.5%;}
-    .hotspot.rim.bottom{bottom:2.5%;}
-    .controls{display:flex;gap:10px;justify-content:center;margin-top:12px;}
-    button{padding:10px 14px;border-radius:10px;border:1px solid #ccc;background:#fff;cursor:pointer;}
+    body{
+      margin:0;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      font-family:Arial,sans-serif;
+    }
+
+    .wheel-stage{ width:min(520px,92vw); }
+
+    .wheel{
+      position:relative;
+      width:100%;
+      aspect-ratio:1/1;
+      transform-origin:50% 50%;
+    }
+
+    .wheel-img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      display:block;
+      pointer-events:none; /* hotspots receive clicks */
+    }
+
+    /* Hotspots */
+    .hotspot{
+      position:absolute;
+      display:block;
+    }
+
+    .hotspot.center{
+      left:50%;
+      top:50%;
+      width:30%;
+      height:30%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+    }
+
+    .hotspot.wedge{
+      left:50%;
+      top:50%;
+      width:42%;
+      height:18%;
+      transform: rotate(var(--angle)) translate(18%,-50%);
+      transform-origin:0% 50%;
+      border-radius:999px;
+    }
+
+    .hotspot.rim{
+      left:50%;
+      width:86%;
+      height:14%;
+      transform:translateX(-50%);
+      border-radius:999px;
+    }
+    .hotspot.rim.top{ top:2.5%; }
+    .hotspot.rim.bottom{ bottom:2.5%; }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      margin-top:12px;
+    }
+    button{
+      padding:10px 14px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      background:#fff;
+      cursor:pointer;
+    }
+
+    /* =========================
+       TEMP DEBUG: SHOW NUMBERS
+       ========================= */
+    .hotspot.wedge::after{
+      content: attr(data-tag);
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform: translate(-50%,-50%);
+      font-weight:700;
+      font-size:18px;
+      color:#000;
+      background: rgba(255,255,255,.85);
+      border-radius: 999px;
+      padding: 4px 10px;
+    }
   </style>
-  /* TEMP: show wedge numbers */
-.hotspot.wedge::after{
-  content: attr(data-tag);
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform: translate(-50%,-50%);
-  font-weight:700;
-  font-size:18px;
-  color:#000;
-  background: rgba(255,255,255,.85);
-  border-radius: 999px;
-  padding: 4px 10px;
-}
-
 </head>
-<body>
 
+<body>
   <div class="wheel-stage">
     <div id="wheel" class="wheel">
-      <!-- ✅ IMPORTANT: file name is EXACTLY Wheel.png -->
+      <!-- IMPORTANT: file name is EXACTLY Wheel.png -->
       <img src="Wheel.png" alt="Wheel" class="wheel-img" />
 
-      <!-- CENTER -->
-      <a class="hotspot center" href="https://example.com/home" target="_blank" rel="noopener"></a>
+      <!-- CENTER (update this URL) -->
+      <a class="hotspot center"
+         href="https://example.com/home"
+         target="_blank" rel="noopener"
+         aria-label="Home"></a>
 
-      <!-- WEDGES (8 slices) -->
-      <a class="hotspot wedge" data-tag="1" style="--angle:-90deg" href="https://example.com/link1" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="2" style="--angle:-45deg" href="https://example.com/link2" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="3" style="--angle:0deg"   href="https://example.com/link3" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="4" style="--angle:45deg"  href="https://example.com/link4" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="5" style="--angle:90deg"  href="https://example.com/link5" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="6" style="--angle:135deg" href="https://example.com/link6" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="7" style="--angle:180deg" href="https://example.com/link7" target="_blank" rel="noopener"></a>
-<a class="hotspot wedge" data-tag="8" style="--angle:-135deg" href="https://example.com/link8" target="_blank" rel="noopener"></a>
+      <!-- WEDGES (TEMP numbered so you can map titles -> numbers) -->
+      <a class="hotspot wedge" data-tag="1" style="--angle:-90deg"
+         href="https://example.com/link1"
+         target="_blank" rel="noopener"
+         aria-label="Slice 1"></a>
 
+      <a class="hotspot wedge" data-tag="2" style="--angle:-45deg"
+         href="https://example.com/link2"
+         target="_blank" rel="noopener"
+         aria-label="Slice 2"></a>
 
-      <!-- RIMS -->
-      <a class="hotspot rim top" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/oracy" target="_blank" rel="noopener"></a>
-      <a class="hotspot rim bottom" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/researchlearn-more" target="_blank" rel="noopener"></a>
+      <a class="hotspot wedge" data-tag="3" style="--angle:0deg"
+         href="https://example.com/link3"
+         target="_blank" rel="noopener"
+         aria-label="Slice 3"></a>
+
+      <a class="hotspot wedge" data-tag="4" style="--angle:45deg"
+         href="https://example.com/link4"
+         target="_blank" rel="noopener"
+         aria-label="Slice 4"></a>
+
+      <a class="hotspot wedge" data-tag="5" style="--angle:90deg"
+         href="https://example.com/link5"
+         target="_blank" rel="noopener"
+         aria-label="Slice 5"></a>
+
+      <a class="hotspot wedge" data-tag="6" style="--angle:135deg"
+         href="https://example.com/link6"
+         target="_blank" rel="noopener"
+         aria-label="Slice 6"></a>
+
+      <a class="hotspot wedge" data-tag="7" style="--angle:180deg"
+         href="https://example.com/link7"
+         target="_blank" rel="noopener"
+         aria-label="Slice 7"></a>
+
+      <a class="hotspot wedge" data-tag="8" style="--angle:-135deg"
+         href="https://example.com/link8"
+         target="_blank" rel="noopener"
+         aria-label="Slice 8"></a>
+
+      <!-- RIMS (update these URLs) -->
+      <a class="hotspot rim top"
+         href="https://example.com/top-rim"
+         target="_blank" rel="noopener"
+         aria-label="Top Rim"></a>
+
+      <a class="hotspot rim bottom"
+         href="https://example.com/bottom-rim"
+         target="_blank" rel="noopener"
+         aria-label="Bottom Rim"></a>
     </div>
 
     <div class="controls">
@@ -83,20 +186,22 @@
       if(Math.abs(velocity) < 0.05){ spinning=false; velocity=0; return; }
       rafId = requestAnimationFrame(animate);
     }
+
     function spin(){
       velocity = 18 + Math.random() * 10;
       spinning = true;
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(animate);
     }
+
     function stop(){
       spinning = false;
       velocity = 0;
       cancelAnimationFrame(rafId);
     }
+
     spinBtn.addEventListener("click", spin);
     stopBtn.addEventListener("click", stop);
   </script>
-
 </body>
 </html>

@@ -20,6 +20,21 @@
     .controls{display:flex;gap:10px;justify-content:center;margin-top:12px;}
     button{padding:10px 14px;border-radius:10px;border:1px solid #ccc;background:#fff;cursor:pointer;}
   </style>
+  /* TEMP: show wedge numbers */
+.hotspot.wedge::after{
+  content: attr(data-tag);
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  font-weight:700;
+  font-size:18px;
+  color:#000;
+  background: rgba(255,255,255,.85);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
 </head>
 <body>
 
@@ -32,14 +47,15 @@
       <a class="hotspot center" href="https://example.com/home" target="_blank" rel="noopener"></a>
 
       <!-- WEDGES (8 slices) -->
-      <a class="hotspot wedge" style="--angle:-90deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:-45deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:0deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:45deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:90deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:135deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:180deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive" target="_blank" rel="noopener"></a>
-      <a class="hotspot wedge" style="--angle:-135deg" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"_blank" rel="noopener"></a>
+      <a class="hotspot wedge" data-tag="1" style="--angle:-90deg" href="https://example.com/link1" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="2" style="--angle:-45deg" href="https://example.com/link2" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="3" style="--angle:0deg"   href="https://example.com/link3" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="4" style="--angle:45deg"  href="https://example.com/link4" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="5" style="--angle:90deg"  href="https://example.com/link5" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="6" style="--angle:135deg" href="https://example.com/link6" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="7" style="--angle:180deg" href="https://example.com/link7" target="_blank" rel="noopener"></a>
+<a class="hotspot wedge" data-tag="8" style="--angle:-135deg" href="https://example.com/link8" target="_blank" rel="noopener"></a>
+
 
       <!-- RIMS -->
       <a class="hotspot rim top" href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/oracy" target="_blank" rel="noopener"></a>

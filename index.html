@@ -15,193 +15,266 @@
       font-family:Arial, sans-serif;
     }
 
-    .wheel-stage{
-      width:min(560px, 94vw);  /* a bit bigger for phones */
+    .stage{
+      width: min(640px, 96vw);
       padding: 12px;
     }
 
-    .wheel{
-      position:relative;
+    svg{
       width:100%;
+      height:auto;
+      display:block;
       aspect-ratio:1/1;
-      touch-action: manipulation; /* better tap behavior */
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .wheel-img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      display:block;
-      pointer-events:none; /* links receive clicks */
-      user-select:none;
-      -webkit-user-drag:none;
-    }
-
-    /* Hotspots */
-    .hotspot{
-      position:absolute;
-      display:block;
-      text-decoration:none;
-      border-radius:999px;
-      cursor:pointer;
-      /* make taps feel instant */
       touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      user-select:none;
     }
 
-    /* Center */
-    .hotspot.center{
-      left:50%;
-      top:50%;
-      width:30%;
-      height:30%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
+    a{ cursor:pointer; }
+
+    /* Hit areas are invisible until hover/active */
+    .hit{
+      fill: rgba(255,255,255,0);
+      stroke: rgba(255,255,255,0);
+      stroke-width: 3;
+      transition: fill .12s ease, stroke .12s ease;
     }
 
-    /* Wedges */
-    .hotspot.wedge{
-      left:50%;
-      top:50%;
-      width:44%;
-      height:20%;
-      transform: rotate(var(--angle)) translate(18%,-50%);
-      transform-origin:0% 50%;
-      border-radius:999px;
-    }
-
-    /* Rim links */
-    .hotspot.rim{
-      left:50%;
-      width:88%;
-      height:14%;
-      transform:translateX(-50%);
-      border-radius:999px;
-    }
-    .hotspot.rim.top{ top:2.5%; }
-    .hotspot.rim.bottom{ bottom:2.5%; }
-
-    /* =========================
-       Hover / Tap highlights
-       ========================= */
-
-    /* Subtle highlight on hover (desktop) */
-    .hotspot:hover{
-      background: rgba(255, 255, 255, 0.18);
-      outline: 2px solid rgba(255, 255, 255, 0.55);
-      outline-offset: 2px;
-    }
-
-    /* Keyboard accessibility */
-    .hotspot:focus-visible{
-      background: rgba(255, 255, 255, 0.22);
-      outline: 3px solid rgba(255, 255, 255, 0.75);
-      outline-offset: 3px;
-    }
-
-    /* Mobile tap feedback */
-    .hotspot:active{
-      background: rgba(255, 255, 255, 0.26);
-      outline: 2px solid rgba(255, 255, 255, 0.8);
-      outline-offset: 2px;
-    }
-
-    /* On touch devices, hover can “stick”; limit hover styles to devices that actually hover */
-    @media (hover: none) {
-      .hotspot:hover{
-        background: transparent;
-        outline: none;
+    /* Desktop hover highlight */
+    @media (hover:hover){
+      .hit:hover{
+        fill: rgba(255,255,255,0.22);
+        stroke: rgba(255,255,255,0.70);
       }
     }
 
-    /* Make targets a bit bigger on smaller screens */
-    @media (max-width: 480px){
-      .wheel-stage{ width: min(620px, 96vw); }
-      .hotspot.center{ width:34%; height:34%; }
-      .hotspot.wedge{ width:48%; height:22%; transform: rotate(var(--angle)) translate(16%,-50%); }
-      .hotspot.rim{ width:92%; height:16%; }
+    /* Keyboard focus */
+    a:focus-visible .hit{
+      fill: rgba(255,255,255,0.25);
+      stroke: rgba(255,255,255,0.85);
+      outline:none;
     }
 
-    /* Optional: if you ever want to visually confirm hotspots, uncomment:
-    .hotspot{ outline:2px dashed rgba(255,0,0,.55); background:rgba(255,0,0,.08); }
-    */
+    /* Mobile tap feedback */
+    a:active .hit, .hit:active{
+      fill: rgba(255,255,255,0.30);
+      stroke: rgba(255,255,255,0.90);
+    }
+
+    /* Center "spin button" hover feedback (subtle) */
+    .center-hit{
+      fill: rgba(255,255,255,0);
+      stroke: rgba(255,255,255,0);
+      stroke-width: 3;
+      transition: fill .12s ease, stroke .12s ease;
+      cursor: pointer;
+    }
+    @media (hover:hover){
+      .center-hit:hover{
+        fill: rgba(255,255,255,0.18);
+        stroke: rgba(255,255,255,0.55);
+      }
+    }
+    .center-hit:active{
+      fill: rgba(255,255,255,0.26);
+      stroke: rgba(255,255,255,0.80);
+    }
   </style>
 </head>
 
 <body>
-  <div class="wheel-stage">
-    <div class="wheel" aria-label="Interactive wheel">
+  <div class="stage">
+    <svg viewBox="0 0 1000 1000" role="img" aria-label="Interactive Literacy Wheel">
 
-      <img src="Wheel.png"
-           alt="Literacy for Multilingual Learners Wheel"
-           class="wheel-img" />
+      <!-- ROTOR: EVERYTHING THAT SHOULD SPIN GOES INSIDE THIS GROUP -->
+      <g id="rotor">
+        <!-- Background image -->
+        <image href="Wheel.png" x="0" y="0" width="1000" height="1000" preserveAspectRatio="xMidYMid meet"></image>
 
-      <!-- CENTER -->
-      <a class="hotspot center"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/home"
-         target="_blank" rel="noopener"
-         aria-label="Home"></a>
+        <!-- Slice links (created by script) -->
+        <g id="slices"></g>
 
-      <!-- 1: Culturally & Linguistically Responsive -->
-      <a class="hotspot wedge" style="--angle:-90deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive"
-         target="_blank" rel="noopener"
-         aria-label="Culturally and Linguistically Responsive"></a>
+        <!-- Rim links (created by script) -->
+        <g id="rims"></g>
+      </g>
 
-      <!-- 2: Assessment -->
-      <a class="hotspot wedge" style="--angle:-45deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment"
-         target="_blank" rel="noopener"
-         aria-label="Assessment"></a>
-
-      <!-- 3: Phonological Awareness -->
-      <a class="hotspot wedge" style="--angle:0deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness"
-         target="_blank" rel="noopener"
-         aria-label="Phonological Awareness"></a>
-
-      <!-- 4: Phonics & Spelling -->
-      <a class="hotspot wedge" style="--angle:45deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling"
-         target="_blank" rel="noopener"
-         aria-label="Phonics and Spelling"></a>
-
-      <!-- 5: Vocabulary & Morphology -->
-      <a class="hotspot wedge" style="--angle:90deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology"
-         target="_blank" rel="noopener"
-         aria-label="Vocabulary and Morphology"></a>
-
-      <!-- 6: Syntax -->
-      <a class="hotspot wedge" style="--angle:135deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax"
-         target="_blank" rel="noopener"
-         aria-label="Syntax"></a>
-
-      <!-- 7: Cross-Linguistic Connections -->
-      <a class="hotspot wedge" style="--angle:180deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections"
-         target="_blank" rel="noopener"
-         aria-label="Cross Linguistic Connections"></a>
-
-      <!-- 8: Text Comprehension & Written Expression -->
-      <a class="hotspot wedge" style="--angle:-135deg"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression"
-         target="_blank" rel="noopener"
-         aria-label="Text Comprehension and Written Expression"></a>
-
-      <!-- RIMS (adjust these if you want different destinations) -->
-      <a class="hotspot rim top"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/oral-language-development-and-academic-language"
-         target="_blank" rel="noopener"
-         aria-label="Oral Language Development and Academic Language"></a>
-
-      <a class="hotspot rim bottom"
-         href="https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls"
-         target="_blank" rel="noopener"
-         aria-label="Literacy for MLs Home"></a>
-
-    </div>
+      <!-- CENTER: DOES NOT SPIN; CLICK/TAP TO SPIN -->
+      <g id="centerControl" aria-label="Spin wheel">
+        <!-- This is the clickable/tappable center area -->
+        <circle id="centerCircle" class="center-hit" cx="500" cy="500" r="150"></circle>
+      </g>
+    </svg>
   </div>
+
+  <script>
+    // ---------------- Helpers ----------------
+    function polarToXY(cx, cy, r, deg){
+      const rad = (deg - 90) * Math.PI / 180; // -90 makes 0deg at 12 o'clock
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+
+    function annularSectorPath(cx, cy, rInner, rOuter, startDeg, endDeg){
+      const p1 = polarToXY(cx, cy, rOuter, startDeg);
+      const p2 = polarToXY(cx, cy, rOuter, endDeg);
+      const p3 = polarToXY(cx, cy, rInner, endDeg);
+      const p4 = polarToXY(cx, cy, rInner, startDeg);
+
+      const sweep = ((endDeg - startDeg) % 360 + 360) % 360;
+      const largeArc = sweep > 180 ? 1 : 0;
+
+      return [
+        `M ${p1.x} ${p1.y}`,
+        `A ${rOuter} ${rOuter} 0 ${largeArc} 1 ${p2.x} ${p2.y}`,
+        `L ${p3.x} ${p3.y}`,
+        `A ${rInner} ${rInner} 0 ${largeArc} 0 ${p4.x} ${p4.y}`,
+        "Z"
+      ].join(" ");
+    }
+
+    function makeSvgEl(tag){
+      return document.createElementNS("http://www.w3.org/2000/svg", tag);
+    }
+
+    // ---------------- Your Links (in your mapped order 1–8) ----------------
+    const sliceLinks = [
+      { label: "Culturally and Linguistically Responsive", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/culturally-and-linguistically-responsive" },
+      { label: "Assessment", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/assessment" },
+      { label: "Phonological Awareness", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonological-awareness" },
+      { label: "Phonics and Spelling", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/phonics-and-spelling" },
+      { label: "Vocabulary and Morphology", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/vocabulary-and-morphology" },
+      { label: "Syntax", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/syntax" },
+      { label: "Cross Linguistic Connections", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/cross-linguistic-connections" },
+      { label: "Text Comprehension and Written Expression", href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/text-comprehension-and-written-expression" },
+    ];
+
+    // These are the center angles that matched your wheel layout earlier:
+    const centers = [-90, -45, 0, 45, 90, 135, 180, -135];
+
+    // ---------------- Build Wedges + Rims ----------------
+    const cx = 500, cy = 500;
+
+    // If highlights are slightly in/out, tweak these two:
+    const rInner = 190;
+    const rOuter = 465;
+    const halfSpan = 22.5; // 45° slices
+
+    const slicesGroup = document.getElementById("slices");
+
+    sliceLinks.forEach((s, i) => {
+      const c = centers[i];
+      const start = c - halfSpan;
+      const end   = c + halfSpan;
+
+      const a = makeSvgEl("a");
+      a.setAttribute("href", s.href);
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+      a.setAttribute("aria-label", s.label);
+
+      const p = makeSvgEl("path");
+      p.setAttribute("d", annularSectorPath(cx, cy, rInner, rOuter, start, end));
+      p.setAttribute("class", "hit");
+
+      a.appendChild(p);
+      slicesGroup.appendChild(a);
+    });
+
+    // Rim links (top and bottom arcs)
+    const rimsGroup = document.getElementById("rims");
+    const rimInner = 470;
+    const rimOuter = 495;
+
+    const rimLinks = [
+      {
+        label: "Oral Language Development and Academic Language",
+        href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/oral-language-development-and-academic-language",
+        start: 200,
+        end: 340
+      },
+      {
+        label: "Literacy for MLs Home",
+        href: "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls",
+        start: 20,
+        end: 160
+      }
+    ];
+
+    rimLinks.forEach(r => {
+      const a = makeSvgEl("a");
+      a.setAttribute("href", r.href);
+      a.setAttribute("target", "_blank");
+      a.setAttribute("rel", "noopener");
+      a.setAttribute("aria-label", r.label);
+
+      const p = makeSvgEl("path");
+      p.setAttribute("d", annularSectorPath(cx, cy, rimInner, rimOuter, r.start, r.end));
+      p.setAttribute("class", "hit");
+
+      a.appendChild(p);
+      rimsGroup.appendChild(a);
+    });
+
+    // ---------------- Spin Logic (no buttons) ----------------
+    const rotor = document.getElementById("rotor");
+    const centerCircle = document.getElementById("centerCircle");
+
+    let angle = 0;        // degrees
+    let velocity = 0;     // degrees per frame-ish
+    let spinning = false;
+    let rafId = null;
+
+    function render(){
+      rotor.setAttribute("transform", `rotate(${angle} ${cx} ${cy})`);
+    }
+
+    function tick(){
+      if(!spinning) return;
+
+      // friction
+      velocity *= 0.985;
+
+      angle = (angle + velocity) % 360;
+      render();
+
+      if(Math.abs(velocity) < 0.05){
+        spinning = false;
+        velocity = 0;
+        return;
+      }
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function spin(){
+      // Add a fresh “kick” each time you tap
+      const kick = 18 + Math.random() * 10; // 18–28
+      velocity += kick;
+
+      if(!spinning){
+        spinning = true;
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    // Single click/tap: spin
+    centerCircle.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
+      spin();
+    });
+
+    // Double-click / double-tap: go Home (optional)
+    const HOME_URL = "https://sites.google.com/cherrycreekschools.org/ccsd-literacy-for-mls/home";
+    let lastTap = 0;
+    centerCircle.addEventListener("pointerup", () => {
+      const now = Date.now();
+      if(now - lastTap < 320){
+        window.open(HOME_URL, "_blank", "noopener");
+      }
+      lastTap = now;
+    });
+
+    // Initial render
+    render();
+  </script>
 </body>
 </html>
